@@ -1,0 +1,22 @@
+/* Carousel */
+.my-container {
+    padding: 0;
+}
+
+.my-container .carousel-item{
+    max-height: 500px;
+}
+
+.my-container .carousel-item img{
+    object-fit: cover;
+}
+/* Carousel */
+
+.pokemon-col {
+    padding: 5em;
+    align-self: center;
+}
+
+.pokemon-card .pokemon-body{
+    display: grid;
+}

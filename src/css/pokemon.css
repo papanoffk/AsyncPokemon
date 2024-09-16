@@ -1,0 +1,12 @@
+.pokemon-name {
+    text-align: center;
+    font-size: 4em;
+}
+
+.pokemon-img {
+    height: 25em;
+}
+
+.pokemon-text {
+    font-size: 2em;
+}
