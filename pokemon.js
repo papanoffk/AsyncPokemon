@@ -7,7 +7,32 @@ app.use(express.static("src"));
 
 const PORT = 3000
 
-app.get('/', async (req, res) => {
+async function getPokemonByID(id, resolve, reject) {
+    axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
+    .then(async (res) => {
+        resolve(res.data);
+    })
+    .catch(async (err) => {
+        reject(err);
+    })
+}
+
+async function getPokemons(count, resolve, reject) {
+    let _arr = [];
+    for(let i = 1; i < count; i++){
+        _arr.push(axios.get(`https://pokeapi.co/api/v2/pokemon/${i}`));
+    }
+
+    Promise.all(_arr)
+    .then(async (value) => {
+        resolve(value);
+    })
+    .catch(async (err) => {
+        reject(err);
+    });
+}
+
+/*app.get('/', async (req, res) => {
     console.log('Ping')
 
     let _arr = []
@@ -26,9 +51,25 @@ app.get('/', async (req, res) => {
         console.log(err)
         res.render("error.hbs");
     })
+})*/
+
+app.get('/', async (req, res) => {
+    console.log('Ping')
+
+    getPokemons(50,
+        async (value) => {
+            res.render("main.hbs", {
+                pokemons: value
+            });
+        },
+        async (err) => {
+            console.log(err);
+            res.render("error.hbs");
+        }
+    );
 })
 
-app.get('/pokemons/:id', async (req, res) => {
+/*app.get('/pokemons/:id', async (req, res) => {
     axios.get(`https://pokeapi.co/api/v2/pokemon/${req.params["id"]}`)
     .then(async (response) => {
         res.render("pokemon.hbs", {
@@ -39,6 +80,19 @@ app.get('/pokemons/:id', async (req, res) => {
         console.log(err)
         res.render("error.hbs");
     })
+})*/
+
+app.get('/pokemons/:id', async (req, res) => {
+    getPokemonByID(req.params["id"], 
+        async (pokemon) => {
+            res.render("pokemon.hbs", {
+                pokemon: pokemon
+            });
+        }, 
+        async (err) => {
+            console.log(err)
+            res.render("error.hbs");
+        });
 })
 
 app.listen(PORT, () => {
